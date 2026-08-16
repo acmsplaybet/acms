@@ -11,7 +11,7 @@ const config = {
     secure: false
 };
 
-const IGNORED_PATHS = [
+const IGNORED_TOP_DIRS = [
     '.git',
     'node_modules',
     'android',
@@ -20,37 +20,42 @@ const IGNORED_PATHS = [
     '.vscode',
     '.idea',
     '.claude',
-    '.gemini',
-    'package-lock.json',
-    '.DS_Store',
-    'Thumbs.db'
+    '.gemini'
 ];
 
-function shouldIgnore(relativePath) {
-    const parts = relativePath.split(/[\\/]/);
-    for (const part of parts) {
-        if (IGNORED_PATHS.includes(part)) return true;
-        if (part.endsWith('.log') || part.endsWith('.tmp') || part.endsWith('.bak')) return true;
-    }
+const IGNORED_EXTS = ['.log', '.tmp', '.bak'];
+
+function shouldIgnore(fileName, isDir) {
+    if (IGNORED_TOP_DIRS.includes(fileName)) return true;
+    if (fileName === 'package-lock.json' || fileName === '.DS_Store' || fileName === 'Thumbs.db') return true;
+    if (!isDir && IGNORED_EXTS.some(ext => fileName.endsWith(ext))) return true;
     return false;
 }
 
-function getAllFiles(dir, baseDir = dir) {
-    let results = [];
-    const list = fs.readdirSync(dir);
-    for (const file of list) {
-        const fullPath = path.join(dir, file);
-        const relPath = path.relative(baseDir, fullPath);
-        if (shouldIgnore(relPath)) continue;
+async function uploadDirectory(client, localDirPath, remoteDirPath) {
+    await client.ensureDir(remoteDirPath);
+    const items = fs.readdirSync(localDirPath);
 
-        const stat = fs.statSync(fullPath);
-        if (stat && stat.isDirectory()) {
-            results = results.concat(getAllFiles(fullPath, baseDir));
+    for (const item of items) {
+        const fullLocalPath = path.join(localDirPath, item);
+        const stat = fs.statSync(fullLocalPath);
+        const isDirectory = stat.isDirectory();
+
+        if (shouldIgnore(item, isDirectory)) {
+            continue;
+        }
+
+        const targetRemotePath = `${remoteDirPath}/${item}`;
+
+        if (isDirectory) {
+            await uploadDirectory(client, fullLocalPath, targetRemotePath);
+            // Navigate back to current remoteDirPath
+            await client.cd(remoteDirPath);
         } else {
-            results.push({ fullPath, relPath, size: stat.size });
+            console.log(`⬆️ Uploading: ${item} -> ${targetRemotePath} (${(stat.size / 1024).toFixed(1)} KB)`);
+            await client.uploadFrom(fullLocalPath, item);
         }
     }
-    return results;
 }
 
 async function deploy() {
@@ -58,17 +63,13 @@ async function deploy() {
     console.log("🚀 STARTING ACMS LIVE SERVER DEPLOYMENT (FTP)");
     console.log(`📍 Host: ${config.host}`);
     console.log(`👤 User: ${config.user}`);
-    console.log(`📁 Target Remote Dir: ${config.remoteDir}/`);
+    console.log(`📁 Target Remote Dir: /${config.remoteDir}/`);
     console.log("==========================================================\n");
 
     const client = new ftp.Client();
     client.ftp.verbose = false;
 
     try {
-        const projectRoot = __dirname;
-        const filesToUpload = getAllFiles(projectRoot);
-        console.log(`📦 Found ${filesToUpload.length} files to synchronize.\n`);
-
         console.log("⏳ Connecting to FTP server...");
         await client.access({
             host: config.host,
@@ -78,24 +79,14 @@ async function deploy() {
         });
         console.log("✓ Connected successfully!\n");
 
-        let uploadedCount = 0;
-        let totalBytes = 0;
+        const localRoot = __dirname;
+        const initialRemotePath = `/${config.remoteDir}`;
 
-        for (const file of filesToUpload) {
-            const remoteFilePath = `${config.remoteDir}/${file.relPath.replace(/\\/g, '/')}`;
-            const remoteDirPath = path.posix.dirname(remoteFilePath);
+        console.log(`📦 Synchronizing files to ${initialRemotePath}...`);
+        await uploadDirectory(client, localRoot, initialRemotePath);
 
-            await client.ensureDir(remoteDirPath);
-            await client.uploadFrom(file.fullPath, remoteFilePath);
-            
-            uploadedCount++;
-            totalBytes += file.size;
-            process.stdout.write(`\r[${uploadedCount}/${filesToUpload.length}] Uploaded: ${file.relPath} (${(file.size / 1024).toFixed(1)} KB)`);
-        }
-
-        console.log("\n\n==========================================================");
+        console.log("\n==========================================================");
         console.log(`✅ DEPLOYMENT COMPLETED SUCCESSFULLY!`);
-        console.log(`📊 Summary: ${uploadedCount} files uploaded (${(totalBytes / (1024 * 1024)).toFixed(2)} MB).`);
         console.log(`🌐 Live URL: http://${config.host}/${config.remoteDir}/`);
         console.log("==========================================================");
     } catch (err) {
