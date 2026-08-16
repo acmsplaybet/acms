@@ -15,6 +15,8 @@ const config = {
 
 const IGNORED_TOP_DIRS = [
     '.git',
+    '.github',
+    '.agents',
     'node_modules',
     'android',
     'scratch',
@@ -25,12 +27,51 @@ const IGNORED_TOP_DIRS = [
     '.gemini'
 ];
 
-const IGNORED_EXTS = ['.log', '.tmp', '.bak'];
+const IGNORED_EXTS = [
+    '.sql',
+    '.md',
+    '.bat',
+    '.cmd',
+    '.sh',
+    '.py',
+    '.code-workspace',
+    '.log',
+    '.tmp',
+    '.bak'
+];
+
+const IGNORED_EXACT_FILES = [
+    '.cursorrules',
+    '.gitignore',
+    'deploy.js',
+    'deploy.bat',
+    'package.json',
+    'package-lock.json',
+    'capacitor.config.json',
+    '.DS_Store',
+    'Thumbs.db',
+    'truncate_brands.php',
+    'testuser.php',
+    'api_test.php',
+    'api_test_matches.php',
+    'scratch_check_dates.php',
+    'scratch_check_matches.php'
+];
 
 function shouldIgnore(fileName, isDir) {
-    if (IGNORED_TOP_DIRS.includes(fileName)) return true;
-    if (fileName === 'package-lock.json' || fileName === '.DS_Store' || fileName === 'Thumbs.db') return true;
-    if (!isDir && IGNORED_EXTS.some(ext => fileName.endsWith(ext))) return true;
+    // 1. Check directories
+    if (isDir && IGNORED_TOP_DIRS.includes(fileName)) return true;
+
+    // 2. Check exact filenames
+    if (IGNORED_EXACT_FILES.includes(fileName)) return true;
+
+    // 3. Check file extensions
+    if (!isDir) {
+        if (IGNORED_EXTS.some(ext => fileName.toLowerCase().endsWith(ext))) return true;
+        // Ignore test scripts and scratch PHP files
+        if (fileName.startsWith('test_') || fileName.startsWith('scratch_') || fileName.startsWith('api_test')) return true;
+    }
+
     return false;
 }
 
