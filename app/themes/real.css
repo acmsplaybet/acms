@@ -1,0 +1,8 @@
+/* themes/real.css */
+/* Real Brand UI structural elements */
+:root {
+    --radius-card: 16px;
+    --radius-button: 12px;
+    --radius-nav-indicator: 20px;
+    --radius-input: 10px;
+}

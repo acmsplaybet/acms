@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Real Betting Tips</string>
+    <string name="title_activity_main">Real Betting Tips</string>
+    <string name="package_name">com.pep.bettingtips</string>
+    <string name="custom_url_scheme">com.pep.bettingtips</string>
+    <string name="server_client_id">366733771640-81uenafnkg3lgkp5rpge6lubcmq2mha9.apps.googleusercontent.com</string>
+</resources>

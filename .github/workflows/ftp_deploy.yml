@@ -1,0 +1,38 @@
+name: Deploy ACMS to Live Server (FTP)
+
+on:
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: Deploy to Live Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Checkout Repository Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📂 Sync Files via FTP to Live Server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.PLAYBET_FTP_SERVER || '51.195.31.193' }}
+          username: ${{ secrets.PLAYBET_FTP_USERNAME || 'playbet' }}
+          password: ${{ secrets.PLAYBET_FTP_PASSWORD }}
+          server-dir: ${{ secrets.PLAYBET_FTP_TARGET_DIR || 'acms/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/android/**
+            **/scratch/**
+            **/gereksiz/**
+            **/.vscode/**
+            **/.idea/**
+            **/.claude/**
+            **/.gemini/**
+            package-lock.json
+            deploy.bat

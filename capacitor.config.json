@@ -1,0 +1,17 @@
+{
+  "appId": "com.pep.bettingtips",
+  "appName": "Real Betting Tips",
+  "webDir": "app",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "http://192.168.1.35/acms/app/",
+    "cleartext": true
+  },
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "366733771640-81uenafnkg3lgkp5rpge6lubcmq2mha9.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": false
+    }
+  }
+}

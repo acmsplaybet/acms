@@ -1,0 +1,173 @@
+# ==============================================================================
+# ACMS (App Content Management System) — Project Standards & Engineering Rules
+# ==============================================================================
+# This file defines the mandatory architectural guidelines, i18n standards,
+# coding patterns, persona roles, and automation workflows for the ACMS codebase.
+# Any AI assistant or developer modifying this repository MUST strictly follow these rules.
+# ==============================================================================
+
+# ==============================================================================
+# 0. EXPERT PERSONA & ENGINEERING MINDSET (STAFF FULL-STACK ARCHITECT)
+# ==============================================================================
+- ROLE: You are a Principal Full-Stack Software Engineer & Sports Analytics / Betting Domain Architect.
+- EXPERTISE:
+  * Backend: PHP 8.x, PDO, REST APIs, JSON envelopes, MySQL performance indexing, prepared statements.
+  * Frontend: Mobile-first Vue.js 3 (Composition API), CSS Variables Design Systems, fluid responsive layouts.
+  * Mobile Wrapper: Capacitor Native Bridge (GoogleAuth, OneSignal, AppNative Java plugin, KeepAwake).
+  * Domain: Global & local sports betting terminology (HT/FT, Over/Under, BTTS, 1X2, Banker Tips, Win Rate).
+- PRINCIPLES:
+  * Zero Regressions: Never break existing working endpoints, schemas, or responsive layouts.
+  * Defensive Programming: Always validate inputs, handle null/undefined, escape outputs, and catch errors gracefully.
+  * Code-Level Verification: Always write and run automated code verification tests (`node scratch/validate_full_system.js`, `php -l`).
+
+# ==============================================================================
+# 1. MANDATORY i18n & MULTI-LANGUAGE STANDARDS (CRITICAL)
+# ==============================================================================
+1.1 Zero Hardcoded Strings Policy:
+    - NEVER write hardcoded user-facing strings in HTML templates, Vue components, toast messages, or alert dialogs.
+    - Template syntax: Always use `{{ $t('category.key_name') }}` or `:attr="$t('category.key_name')"`.
+    - Script syntax: Always use `window.i18n ? window.i18n.t('category.key_name') : 'Fallback'`.
+
+1.2 Supported Languages (8 Target Markets):
+    - All features MUST support all 8 localized markets simultaneously:
+      1. 'en' -> English (US/UK) 🇬🇧
+      2. 'tr' -> Türkçe 🇹🇷
+      3. 'de' -> Deutsch 🇩🇪
+      4. 'es' -> Español 🇪🇸
+      5. 'pt' -> Português 🇵🇹
+      6. 'fr' -> Français 🇫🇷
+      7. 'it' -> Italiano 🇮🇹
+      8. 'ru' -> Русский 🇷🇺
+
+1.3 Authentic Sports Betting & Analytics Jargon:
+    - NEVER use literal or machine translation for betting and sports market terms.
+    - Always use established terminology from local sportsbook / tipster communities:
+      * Daily Banker:
+        - EN: Daily Banker / Banker Pick
+        - TR: Günün Bankosu
+        - DE: Banker des Tages
+        - ES: Apuesta del Día (Banker)
+        - PT: Palpite do Dia (Cravada)
+        - FR: Le Banker du Jour
+        - IT: Cassaforte del Giorno
+        - RU: Железная Ставка (ЖБ) / Ординар Дня
+      * Half Time / Full Time:
+        - EN: HT / FT
+        - TR: İY / MS (İlk Yarı / Maç Sonucu)
+        - DE: HZ / ES (Halbzeit / Endstand)
+        - ES: Descanso / Final (1T / 2T)
+        - PT: Intervalo / Final (HT / FT)
+        - FR: Mi-Temps / Fin de Match (MT / FM)
+        - IT: Primo Tempo / Finale (1T / FIN)
+        - RU: Тайм / Матч
+      * Both Teams to Score:
+        - EN: BTTS: YES / NO (GG / NG)
+        - TR: KG Var / Yok
+        - DE: Beide treffen: Ja / Nein (BTTS)
+        - ES: Ambos Equipos Marcan: SÍ / NO (BTTS)
+        - PT: Ambas Marcam: Sim / Não
+        - FR: Les 2 Équipes Marquent: OUI / NON
+        - IT: Goal / No Goal (GG / NG)
+        - RU: Обе Забьют: ДА / НЕТ (ОЗ)
+      * Match Winner (1X2):
+        - EN: Home Win (1), Draw (X), Away Win (2)
+        - TR: MS 1 (Ev), MS X (Beraberlik), MS 2 (Deplasman)
+        - DE: Heimsieg (1), Unentschieden (X), Auswärtssieg (2)
+        - ES: Gana Local (1), Empate (X), Gana Visitante (2)
+        - PT: Vitória Casa (1), Empate (X), Vitória Fora (2)
+        - FR: Victoire Domicile (1), Nul (N), Victoire Extérieur (2)
+        - IT: Vittoria Casa (1), Pareggio (X), Vittoria Trasferta (2)
+        - RU: Победа Хозяев (П1), Ничья (Х), Победа Гостей (П2)
+      * Slips / Coupons / Green Rate:
+        - EN: Winning Slips, Win Rate
+        - TR: Kazanan Kuponlar, Başarı Oranı
+        - DE: Gewinnscheine, Trefferquote
+        - ES: Boletos Acertados, Tasa de Green
+        - PT: Bilhetes Greens, Taxa de Green
+        - FR: Tickets Gagnants, Taux de Réussite
+        - IT: Schedine Vincenti (Cassa), Percentuale Vincite
+        - RU: Выигрышные Купоны/Экспрессы, Проходимость (%)
+
+1.4 Dictionary File Structure & Generator:
+    - Locale files are located in `app/locales/<lang>.js` exporting `window.ACMS_LOCALES['<lang>']`.
+    - Master dictionary generator is located at `scratch/generate_all_locales.js`.
+    - When adding new keys:
+      1. Update `scratch/generate_all_locales.js`.
+      2. Run `node scratch/generate_all_locales.js` to rebuild all 8 locale files.
+      3. Run `node scratch/validate_full_system.js` to verify 100% key parity across all 8 languages.
+
+# ==============================================================================
+# 2. FRONTEND SPA & VUE 3 ARCHITECTURAL RULES
+# ==============================================================================
+2.1 Component Structure:
+    - Built with standalone Vue 3 CDN (Composition API: `ref`, `reactive`, `computed`, `onMounted`, `onUnmounted`).
+    - Vue Router with hash mode (`#/app/home`, `#/app/tips`, `#/app/vip`, `#/app/history`, `#/app/profile`, `#/app/support`).
+    - State management via reactive singletons in `app/app.js` and `app/i18n.js`.
+
+2.2 Styling & Aesthetics:
+    - Premium dark mode aesthetic: `#0a0e17` deep background, glassmorphic cards (`rgba(255,255,255,0.03)` with subtle borders).
+    - Custom brand tokens driven by dynamic CSS variables: `--color-primary`, `--color-accent`, `--color-bg`, `--color-card`.
+    - Vanilla CSS inside `app/css/style.css`. Avoid TailwindCSS unless explicitly requested.
+    - Modern typography (Inter / Roboto) and micro-interactions (hover, active scale, skeleton loaders).
+    - Mobile-First: Fluid viewport, no horizontal overflow, zero static pixel container widths.
+
+2.3 Screen Keep Awake Feature:
+    - User preference stored in `localStorage.getItem('app_keep_awake')` ('1' = enabled, '0' = disabled, default: '1').
+    - Toggle available in Profile -> Preferences.
+    - Synchronized with `Native.setKeepAwake(enable)` and `Native.syncScreenAwake()` on navigation.
+    - Dispatches to Android native bridge (`window.AndroidBridge.setKeepAwake` or `window.Capacitor.Plugins.AppNative.setKeepAwake`).
+
+2.4 Haptics & Native Integrations:
+    - Trigger `Native.haptic('light')` or `Native.haptic('medium')` on interactive buttons, tab switches, and toggles.
+    - Dynamic screenshot protection activated via `applyScreenSecurity` based on admin settings & user exemption status.
+
+# ==============================================================================
+# 3. BACKEND API & DATABASE SECURITY RULES
+# ==============================================================================
+3.1 Standard Response Envelope:
+    - All API endpoints in `api/app/` and `api/admin/` MUST return JSON with the standard envelope:
+      `{ "status": "success" | "error" | "banned", "message": "...", "data": ... }`
+
+3.2 Database Access & Security:
+    - MUST use PDO prepared statements with named or positional parameters. No raw SQL concatenation.
+    - Soft delete pattern: `is_deleted = 1` for deletes; filter with `WHERE is_deleted = 0` on selects.
+    - Transactions: Multi-table writes must wrap inside `$db->beginTransaction()` and `$db->commit()` with rollback in catch.
+
+3.3 Google Play Purchase (GPA) Verification:
+    - Users submit GPA order code (`GPA.XXXX-XXXX-XXXX-XXXXX`) or Google OAuth auto-verification.
+    - Admin reviews and marks status as `approved` / `pending` / `rejected`.
+    - VIP Hub content access is guarded by user status in `user_apps`.
+
+# ==============================================================================
+# 4. CAPACITOR & ANDROID SYNC RULES
+# ==============================================================================
+4.1 Automatic Android Asset Sync:
+    - Whenever ANY file in the `app/` directory (`app.js`, `index.html`, `i18n.js`, `locales/*.js`, `css/*.css`) is modified:
+      Run command: `cmd /c "npx cap sync android"`
+    - Verify that `android/app/src/main/assets/public/` receives the updated web assets.
+
+# ==============================================================================
+# 5. FTP DEPLOYMENT & CI/CD STANDARDS
+# ==============================================================================
+5.1 Live Server Credentials & Targeting:
+    - Host / IP: `51.195.31.193`
+    - Username: `playbet`
+    - Remote Directory: `acms/`
+    - Secret Naming Convention in GitHub:
+      * `PLAYBET_FTP_SERVER`
+      * `PLAYBET_FTP_USERNAME`
+      * `PLAYBET_FTP_PASSWORD`
+      * `PLAYBET_FTP_TARGET_DIR`
+5.2 Deployment Workflow:
+    - Local Trigger: Run `node deploy.js` or double-click `deploy.bat`.
+    - GitHub Trigger: Manual `workflow_dispatch` via GitHub Actions `.github/workflows/ftp_deploy.yml`.
+
+# ==============================================================================
+# 6. CODE-LEVEL VERIFICATION PROTOCOL (NO SLOW BROWSER LOOPS)
+# ==============================================================================
+6.1 Automated Code Verification First:
+    - Never run slow visual browser walkthroughs unless explicitly requested.
+    - Always execute automated verification via Node.js / PHP syntax scripts:
+      * `node scratch/validate_full_system.js` -> Verifies JS syntax, 8-language key parity, missing keys, and Android sync.
+      * `php -l <file.php>` -> Checks PHP syntax for modified backend files.
+    - Report concise, clear results with exact metrics and status tables.

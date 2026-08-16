@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ACMS App</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="core.css?v=82">
+    <!-- Theme CSS will be injected dynamically by app.js -->
+</head>
+<body>
+    <!-- F1.2 App Loader -->
+    <div id="app-loader">
+        <img id="loader-logo" src="" alt="App Logo" style="display:none;">
+        <div class="loader-bar"></div>
+    </div>
+
+    <!-- Vue App Mount Point -->
+    <div id="app" style="opacity: 0; transition: opacity 0.3s ease;">
+        <router-view></router-view>
+    </div>
+
+    <!-- Local Vue 3 & Vue Router (Fast 0ms Local Asset Load) -->
+    <script src="vendor/vue.global.prod.js"></script>
+    <script src="vendor/vue-router.global.prod.js"></script>
+    
+    <!-- Multi-Language Dictionaries (EN Base + TR, DE, ES, PT, FR, IT, RU) -->
+    <script src="locales/en.js?v=84"></script>
+    <script src="locales/tr.js?v=84"></script>
+    <script src="locales/de.js?v=84"></script>
+    <script src="locales/es.js?v=84"></script>
+    <script src="locales/pt.js?v=84"></script>
+    <script src="locales/fr.js?v=84"></script>
+    <script src="locales/it.js?v=84"></script>
+    <script src="locales/ru.js?v=84"></script>
+    <script src="i18n.js?v=84"></script>
+    
+    <!-- App Logic -->
+    <script src="app.js?v=84"></script>
+</body>
+</html>
