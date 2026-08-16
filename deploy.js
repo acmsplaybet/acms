@@ -8,8 +8,7 @@ const config = {
     host: process.env.PLAYBET_FTP_SERVER || '51.195.31.193',
     user: process.env.PLAYBET_FTP_USERNAME || 'playbet',
     password: process.env.PLAYBET_FTP_PASSWORD || '-951-QwerOP01-*',
-    remoteDir: process.env.PLAYBET_FTP_TARGET_DIR || 'public_html/acms',
-    liveDomain: process.env.PLAYBET_LIVE_DOMAIN || 'https://www.playbettingtips.com/acms',
+    remoteDir: process.env.PLAYBET_FTP_TARGET_DIR || 'acms',
     migrationKey: 'acms_playbet_migrate_2026',
     secure: false
 };
