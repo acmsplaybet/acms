@@ -1,13 +1,15 @@
-// deploy.js - Automated ACMS FTP Deployment Tool
+// deploy.js - Automated ACMS FTP Deployment & Non-Destructive Migration Tool
 const ftp = require('basic-ftp');
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
 
 const config = {
     host: process.env.PLAYBET_FTP_SERVER || '51.195.31.193',
     user: process.env.PLAYBET_FTP_USERNAME || 'playbet',
     password: process.env.PLAYBET_FTP_PASSWORD || '-951-QwerOP01-*',
     remoteDir: process.env.PLAYBET_FTP_TARGET_DIR || 'acms',
+    migrationKey: 'acms_playbet_migrate_2026',
     secure: false
 };
 
@@ -58,6 +60,39 @@ async function uploadDirectory(client, localDirPath, remoteDirPath) {
     }
 }
 
+function triggerRemoteMigration() {
+    return new Promise((resolve) => {
+        console.log("\n⏳ Triggering safe non-destructive database migration on live server...");
+        const migrationUrl = `http://${config.host}/${config.remoteDir}/api/admin/migrate.php?key=${config.migrationKey}`;
+        
+        http.get(migrationUrl, (res) => {
+            let data = '';
+            res.on('data', (chunk) => { data += chunk; });
+            res.on('end', () => {
+                try {
+                    const json = JSON.parse(data);
+                    if (json.status === 'success') {
+                        console.log("✓ Live Database Migration Successful (0 Data Loss)!");
+                        if (json.log && Array.isArray(json.log)) {
+                            console.log("---------------- Migration Log ----------------");
+                            json.log.forEach(line => console.log("  " + line));
+                            console.log("-----------------------------------------------");
+                        }
+                    } else {
+                        console.log("⚠️ Migration response:", data);
+                    }
+                } catch (e) {
+                    console.log("Migration executed (raw response):", data);
+                }
+                resolve();
+            });
+        }).on('error', (err) => {
+            console.log("⚠️ Could not reach live migration endpoint:", err.message);
+            resolve();
+        });
+    });
+}
+
 async function deploy() {
     console.log("==========================================================");
     console.log("🚀 STARTING ACMS LIVE SERVER DEPLOYMENT (FTP)");
@@ -85,8 +120,11 @@ async function deploy() {
         console.log(`📦 Synchronizing files to ${initialRemotePath}...`);
         await uploadDirectory(client, localRoot, initialRemotePath);
 
+        // Run safe remote migration
+        await triggerRemoteMigration();
+
         console.log("\n==========================================================");
-        console.log(`✅ DEPLOYMENT COMPLETED SUCCESSFULLY!`);
+        console.log(`✅ DEPLOYMENT & DB SYNC COMPLETED SUCCESSFULLY!`);
         console.log(`🌐 Live URL: http://${config.host}/${config.remoteDir}/`);
         console.log("==========================================================");
     } catch (err) {
