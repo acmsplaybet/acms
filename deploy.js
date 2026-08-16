@@ -9,6 +9,7 @@ const config = {
     user: process.env.PLAYBET_FTP_USERNAME || 'playbet',
     password: process.env.PLAYBET_FTP_PASSWORD || '-951-QwerOP01-*',
     remoteDir: process.env.PLAYBET_FTP_TARGET_DIR || 'acms',
+    liveDomain: process.env.PLAYBET_LIVE_DOMAIN || '',
     migrationKey: 'acms_playbet_migrate_2026',
     secure: false
 };
@@ -105,6 +106,12 @@ const https = require('https');
 
 function triggerRemoteMigration() {
     return new Promise((resolve) => {
+        if (!config.liveDomain) {
+            console.log("\n💡 Bilgi: Canlı domain tanımlanmadığı için HTTP migrasyon tetiklemesi atlandı.");
+            console.log("   (Veritabanı senkronizasyonu için canlıda bir kere admin/migrate.php çalıştırılabilir).");
+            return resolve();
+        }
+
         console.log("\n⏳ Triggering safe non-destructive database migration on live server...");
         const migrationUrl = `${config.liveDomain}/api/admin/migrate.php?key=${config.migrationKey}`;
         console.log(`📡 URL: ${migrationUrl}`);
