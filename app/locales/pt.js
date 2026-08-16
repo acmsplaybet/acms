@@ -39,7 +39,10 @@
         "no_data": "Nenhum dado disponível no momento.",
         "got_it": "Entendi",
         "connection_error": "Erro de conexão. Verifique sua internet.",
-        "maintenance_msg": "O sistema está temporariamente em manutenção."
+        "maintenance_msg": "O sistema está temporariamente em manutenção.",
+        "next": "Próximo",
+        "get_started": "Começar",
+        "skip": "Pular"
     },
     "auth": {
         "signin": "Entrar com E-mail",
@@ -214,7 +217,18 @@
         "terms_of_use": "Termos de Uso",
         "about_us": "Sobre Nós",
         "sign_out": "Sair da Conta",
-        "sign_out_success": "Você saiu com sucesso."
+        "sign_out_success": "Você saiu com sucesso.",
+        "haptic_title": "Resposta Háptica (Vibração)",
+        "haptic_desc": "Vibrar ao tocar em botões e elementos interativos",
+        "haptic_on": "Vibração Ativada",
+        "haptic_off": "Vibração Desativada",
+        "notifications_section": "Preferências de Notificação",
+        "notif_daily_picks_title": "Palpites do Dia & Banker",
+        "notif_daily_picks_desc": "Receba avisos quando novos palpites gratuitos forem publicados",
+        "notif_vip_picks_title": "Palpites VIP Exclusivos",
+        "notif_vip_picks_desc": "Alertas em tempo real para bilhetes VIP de alta odd e 1T/2T",
+        "notif_announcements_title": "Anúncios & Promoções",
+        "notif_announcements_desc": "Descontos especiais, novidades do ecossistema e atualizações"
     },
     "support": {
         "title": "Central de Suporte",

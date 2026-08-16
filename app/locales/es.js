@@ -39,7 +39,10 @@
         "no_data": "No hay datos disponibles en este momento.",
         "got_it": "Entendido",
         "connection_error": "Error de conexión. Por favor revisa tu internet.",
-        "maintenance_msg": "El sistema está temporalmente en mantenimiento."
+        "maintenance_msg": "El sistema está temporalmente en mantenimiento.",
+        "next": "Siguiente",
+        "get_started": "Empezar",
+        "skip": "Omitir"
     },
     "auth": {
         "signin": "Iniciar sesión con Correo",
@@ -214,7 +217,18 @@
         "terms_of_use": "Términos de Uso",
         "about_us": "Sobre Nosotros",
         "sign_out": "Cerrar Sesión",
-        "sign_out_success": "Sesión cerrada correctamente."
+        "sign_out_success": "Sesión cerrada correctamente.",
+        "haptic_title": "Respuesta Háptica (Vibración)",
+        "haptic_desc": "Vibrar al tocar botones y elementos interactivos",
+        "haptic_on": "Vibración Activada",
+        "haptic_off": "Vibración Desactivada",
+        "notifications_section": "Preferencias de Notificaciones",
+        "notif_daily_picks_title": "Pronósticos del Día y Banker",
+        "notif_daily_picks_desc": "Notificarme cuando se publiquen nuevos pronósticos gratuitos",
+        "notif_vip_picks_title": "Pronósticos VIP Exclusivos",
+        "notif_vip_picks_desc": "Alertas instantáneas de partidos VIP de cuota alta y 1T/2T",
+        "notif_announcements_title": "Anuncios y Promociones",
+        "notif_announcements_desc": "Campañas de descuento, novedades del ecosistema y avisos"
     },
     "support": {
         "title": "Mesa de Soporte",

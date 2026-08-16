@@ -130,6 +130,7 @@ try {
             'guest_tips_limit' => (int)($app['guest_tips_limit'] ?? 3),
             'play_store_link' => $app['play_store_link'] ?? '',
             'onesignal_app_id' => $app['onesignal_app_id'] ?? '',
+            'appmetrica_key' => $app['appmetrica_key'] ?? '',
             
             'social' => [
                 'telegram' => $app['contact_telegram'] ?? '',

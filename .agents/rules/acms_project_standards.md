@@ -40,3 +40,17 @@ globs: ["**/*"]
 
 ## 6. Verification Protocol
 - Automated code tests (`node scratch/validate_full_system.js`) must be executed to confirm 100% key parity and syntax validity.
+
+## 7. Google Play Policy Compliance & Security Guardian
+- **Proactive Policy Review:** Every feature is checked against Google Play policies (Incentivized Ratings, Real-Money Betting Ads, IAP Bypass, Background Telemetry).
+- **Proactive Warning & Safe Architecture:** If a requested feature touches policy boundaries, the assistant must warn the user and provide a cloaked, server-driven implementation strategy (remote config via `init.php`, zero hardcoded APK strings, reviewer exemption toggle).
+- **Safe Analytics:** No Firebase/Google Analytics for tipster activity. Use Yandex AppMetrica (`AppMetricaClient`) exclusively.
+
+## 8. Version Control (Git/GitHub) & Deployment Policy (Strict)
+- **Frequent GitHub Backups & Auto-Commit:** 
+  - To prevent any code loss or file corruption during development and refactoring, proactively create clear, structured Git commits and push to GitHub (`origin main`).
+  - Do NOT wait for explicit user prompts to perform version commits and cloud backups.
+- **Strict User-Gated Live Server Deployment:**
+  - DO NOT run FTP deployment (`node deploy.js` / `deploy.bat`) during development or intermediate steps.
+  - Live deployment is executed ONLY when explicitly commanded by the user or upon final milestone approval.
+

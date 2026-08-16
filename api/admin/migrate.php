@@ -366,6 +366,7 @@ $columnDefinitions = [
         "keep_screen_awake" => "TINYINT(1) DEFAULT 1",
         "is_force_update" => "TINYINT(1) DEFAULT 0",
         "is_new_apps" => "TINYINT(1) DEFAULT 0",
+        "appmetrica_key" => "VARCHAR(100) DEFAULT NULL",
         "is_deleted" => "TINYINT(1) DEFAULT 0"
     ],
     "brands" => [

@@ -39,7 +39,10 @@
         "no_data": "No data available at the moment.",
         "got_it": "Got It",
         "connection_error": "Connection error occurred. Please check your internet.",
-        "maintenance_msg": "System is temporarily under maintenance."
+        "maintenance_msg": "System is temporarily under maintenance.",
+        "next": "Next",
+        "get_started": "Get Started",
+        "skip": "Skip"
     },
     "auth": {
         "signin": "Sign In with Email",
@@ -214,7 +217,18 @@
         "terms_of_use": "Terms of Use",
         "about_us": "About Us",
         "sign_out": "Sign Out",
-        "sign_out_success": "Signed out successfully."
+        "sign_out_success": "Signed out successfully.",
+        "haptic_title": "Haptic Feedback (Vibration)",
+        "haptic_desc": "Vibrate on button taps and interactive actions",
+        "haptic_on": "Vibration Enabled",
+        "haptic_off": "Vibration Disabled",
+        "notifications_section": "Notification Preferences",
+        "notif_daily_picks_title": "Daily Tips & Banker Picks",
+        "notif_daily_picks_desc": "Get notified when new daily free tips and banker coupons are published",
+        "notif_vip_picks_title": "VIP Exclusive Predictions",
+        "notif_vip_picks_desc": "Instant alerts for high-odds VIP matches and HT/FT predictions",
+        "notif_announcements_title": "Announcements & Promotions",
+        "notif_announcements_desc": "Special discount campaigns, ecosystem news and app updates"
     },
     "support": {
         "title": "Support Desk",

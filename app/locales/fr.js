@@ -39,7 +39,10 @@
         "no_data": "Aucune donnée disponible pour le moment.",
         "got_it": "Compris",
         "connection_error": "Erreur de connexion. Veuillez vérifier votre internet.",
-        "maintenance_msg": "Le système est temporairement en maintenance."
+        "maintenance_msg": "Le système est temporairement en maintenance.",
+        "next": "Suivant",
+        "get_started": "Démarrer",
+        "skip": "Passer"
     },
     "auth": {
         "signin": "Se connecter par E-mail",
@@ -214,7 +217,18 @@
         "terms_of_use": "Conditions d'Utilisation",
         "about_us": "À Propos de Nous",
         "sign_out": "Se Déconnecter",
-        "sign_out_success": "Déconnexion réussie."
+        "sign_out_success": "Déconnexion réussie.",
+        "haptic_title": "Retour Haptique (Vibration)",
+        "haptic_desc": "Vibrer lors des pressions sur les boutons et interactions",
+        "haptic_on": "Vibration Activée",
+        "haptic_off": "Vibration Désactivée",
+        "notifications_section": "Préférences de Notifications",
+        "notif_daily_picks_title": "Pronostics du Jour & Banker",
+        "notif_daily_picks_desc": "Être alerté lors de la publication de nouveaux pronostics gratuits",
+        "notif_vip_picks_title": "Pronostics VIP Exclusifs",
+        "notif_vip_picks_desc": "Alertes instantanées pour les matchs VIP à grosses cotes et MT/FM",
+        "notif_announcements_title": "Annonces & Promotions",
+        "notif_announcements_desc": "Campagnes de réduction, nouveautés et mises à jour"
     },
     "support": {
         "title": "Support Client",

@@ -14,11 +14,16 @@ if (php_sapi_name() === 'cli') {
     $serverName = $_SERVER['SERVER_NAME'] ?? '';
     $httpHost   = $_SERVER['HTTP_HOST'] ?? '';
     $serverAddr = $_SERVER['SERVER_ADDR'] ?? '';
+    $hostPart   = explode(':', $httpHost)[0];
 
-    if (
-        in_array($httpHost, ['localhost', '127.0.0.1', '::1']) ||
-        strpos($httpHost, 'localhost:') === 0 ||
-        strpos($httpHost, '127.0.0.1:') === 0 ||
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' && getenv('APP_ENV') !== 'production') {
+        $isLocal = true;
+    } elseif (
+        in_array($hostPart, ['localhost', '127.0.0.1', '::1']) ||
+        strpos($hostPart, '192.168.') === 0 ||
+        strpos($hostPart, '10.') === 0 ||
+        strpos($hostPart, '172.') === 0 ||
+        filter_var($hostPart, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false ||
         in_array($serverName, ['localhost', '127.0.0.1', '::1']) ||
         $serverAddr === '127.0.0.1' ||
         $serverAddr === '::1'

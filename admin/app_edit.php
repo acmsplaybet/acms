@@ -499,6 +499,15 @@ $brands = $brandsStmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <input type="text" class="form-control" id="tawk_to_id" name="tawk_to_id" value="<?= htmlspecialchars($app['tawk_to_id'] ?? '') ?>">
                                                 </div>
                                                 <div class="col-md-12 mb-3">
+                                                    <label class="form-label" for="appmetrica_key">
+                                                        <i class="bx bx-bar-chart-alt-2 me-1 text-primary"></i> Yandex AppMetrica API / App Key
+                                                    </label>
+                                                    <input type="text" class="form-control font-monospace" id="appmetrica_key" name="appmetrica_key" value="<?= htmlspecialchars($app['appmetrica_key'] ?? '') ?>" placeholder="Örn: 7d7fd12a-02e2-4d54-98c5-09de6d1954e0">
+                                                    <div class="form-text text-muted small">
+                                                        <i class="bx bx-info-circle me-1"></i> Google Play politika incelemelerinden bağımsız, güvenli mobil analitik ve kullanıcı oturum takibi için AppMetrica anahtarı.
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-3">
                                                     <label class="form-label" for="custom_scripts">Özel Script (JS)</label>
                                                     <textarea class="form-control" id="custom_scripts" name="custom_scripts" rows="4"><?= htmlspecialchars($app['custom_scripts'] ?? '') ?></textarea>
                                                 </div>

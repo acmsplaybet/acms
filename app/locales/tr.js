@@ -39,7 +39,10 @@
         "no_data": "Şu anda gösterilecek veri bulunmuyor.",
         "got_it": "Anladım",
         "connection_error": "Bağlantı hatası oluştu. Lütfen internetinizi kontrol edin.",
-        "maintenance_msg": "Sistem geçici olarak bakım modundadır."
+        "maintenance_msg": "Sistem geçici olarak bakım modundadır.",
+        "next": "İleri",
+        "get_started": "Başla",
+        "skip": "Geç"
     },
     "auth": {
         "signin": "E-posta ile Giriş Yap",
@@ -214,7 +217,18 @@
         "terms_of_use": "Kullanım Koşulları",
         "about_us": "Hakkımızda",
         "sign_out": "Çıkış Yap",
-        "sign_out_success": "Çıkış yapıldı."
+        "sign_out_success": "Çıkış yapıldı.",
+        "haptic_title": "Titreşimli Geri Bildirim",
+        "haptic_desc": "Düğmelere basıldığında ve dokunuşlarda hafif titreşim",
+        "haptic_on": "Titreşim Açık",
+        "haptic_off": "Titreşim Kapalı",
+        "notifications_section": "Bildirim Tercihleri",
+        "notif_daily_picks_title": "Günün Bankosu & Ücretsiz Maçlar",
+        "notif_daily_picks_desc": "Yeni ücretsiz tahminler ve günün kuponları eklendiğinde anında haber ver",
+        "notif_vip_picks_title": "Özel VIP Tahmin Bildirimleri",
+        "notif_vip_picks_desc": "Yüksek oranlı VIP maçlar ve İY/MS tahminleri eklendiğinde anlık bildirim al",
+        "notif_announcements_title": "Duyuru & Kampanya Bildirimleri",
+        "notif_announcements_desc": "İndirimler, VIP kampanyaları ve önemli sistem güncellemeleri hakkında bildirim al"
     },
     "support": {
         "title": "Destek Masası",

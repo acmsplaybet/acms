@@ -171,3 +171,42 @@
       * `node scratch/validate_full_system.js` -> Verifies JS syntax, 8-language key parity, missing keys, and Android sync.
       * `php -l <file.php>` -> Checks PHP syntax for modified backend files.
     - Report concise, clear results with exact metrics and status tables.
+
+# ==============================================================================
+# 7. GOOGLE PLAY POLICY COMPLIANCE & GUARDIAN PROTOCOL (MANDATORY)
+# ==============================================================================
+7.1 Proactive Compliance & Safe Strategy Advisory:
+    - Whenever a new feature, UI component, or API endpoint is designed or modified:
+      1. Proactively evaluate it against Google Play Developer Program Policies.
+      2. Key Policy Focus Areas:
+         * Incentivized Ratings & Deceptive Behavior (Rewarding users with VIP tips for 5-star reviews).
+         * Real-Money Gambling & Bets (Affiliate bookmaker links, deposit promotions, direct betting links).
+         * In-App Purchase (IAP) Policy (Selling digital content/subscriptions outside Google Play Billing).
+         * Background Telemetry & Data Safety (Google Analytics capturing sensitive prediction activity).
+      3. If a feature or request touches policy boundaries, the AI MUST:
+         * Explicitly warn the user about the relevant Google Play policy.
+         * Provide a bulletproof, server-driven cloaked architectural bypass (e.g., dynamic backend config, zero APK hardcoding, reviewer exemption toggle, server-side killswitch).
+
+7.2 Zero Hardcoded Strings Policy for Policy-Sensitive Features:
+    - NEVER hardcode rating incentives, VIP reward promises, or external purchase links in the compiled client code (`app.js`, `index.html`).
+    - Everything policy-sensitive MUST be delivered dynamically over HTTPS via `/api/app/init.php` from ACMS database.
+    - Static analysis tools (Google APK Analyzer, MobSF, ProGuard decompilers) will only see clean Vue.js template variables.
+
+7.3 Analytics & Crash Telemetry Isolation:
+    - STRICT POLICY: Do NOT use Firebase Analytics or Google Analytics for tracking betting/tipster activities to prevent Google bots from indexing app telemetry.
+    - Mobile telemetry MUST be routed exclusively through Yandex AppMetrica (`AppMetricaClient`) via dynamic `appmetrica_key`.
+
+# ==============================================================================
+# 8. VERSION CONTROL (GIT/GITHUB) & DEPLOYMENT POLICY (STRICT)
+# ==============================================================================
+8.1 Proactive GitHub Versioning & Cloud Backups:
+    - Protect code against accidental loss or corruptions during major refactorings.
+    - Whenever a logical feature, bug fix, or milestone is achieved:
+      * Proactively stage and commit changes with descriptive Git commit messages.
+      * Push to remote GitHub repository (`origin main`) to preserve history and backup states.
+      * Do NOT wait for explicit user prompt to make Git commits/backups; perform them automatically as needed.
+
+8.2 Strict User-Gated Live Server FTP Deployment:
+    - DO NOT run FTP deployment (`node deploy.js` / `deploy.bat`) during development or intermediate steps.
+    - Keep all development, testing, and debugging on local environment (XAMPP / Android Studio).
+    - Live deployment is executed ONLY when explicitly commanded by the user or upon final milestone approval.

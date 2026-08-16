@@ -39,7 +39,10 @@
         "no_data": "Derzeit keine Daten verfügbar.",
         "got_it": "Verstanden",
         "connection_error": "Verbindungsfehler aufgetreten. Bitte Internet prüfen.",
-        "maintenance_msg": "System befindet sich vorübergehend im Wartungsmodus."
+        "maintenance_msg": "System befindet sich vorübergehend im Wartungsmodus.",
+        "next": "Weiter",
+        "get_started": "Loslegen",
+        "skip": "Überspringen"
     },
     "auth": {
         "signin": "Mit E-Mail anmelden",
@@ -214,7 +217,18 @@
         "terms_of_use": "Nutzungsbedingungen",
         "about_us": "Über uns",
         "sign_out": "Abmelden",
-        "sign_out_success": "Erfolgreich abgemeldet."
+        "sign_out_success": "Erfolgreich abgemeldet.",
+        "haptic_title": "Haptisches Feedback (Vibration)",
+        "haptic_desc": "Vibrieren bei Tastendruck und Interaktionen",
+        "haptic_on": "Vibration Aktiviert",
+        "haptic_off": "Vibration Deaktiviert",
+        "notifications_section": "Benachrichtigungseinstellungen",
+        "notif_daily_picks_title": "Tages-Tipps & Banker-Wetten",
+        "notif_daily_picks_desc": "Benachrichtigung bei neuen kostenlosen Wett-Tipps und Scheinen",
+        "notif_vip_picks_title": "Exklusive VIP-Prognosen",
+        "notif_vip_picks_desc": "Sofortige Warnungen für VIP-Spiele mit hohen Quoten und HZ/ES-Tipps",
+        "notif_announcements_title": "Ankündigungen & Aktionen",
+        "notif_announcements_desc": "Rabatte, VIP-Kampagnen und App-Neuigkeiten"
     },
     "support": {
         "title": "Support Desk",

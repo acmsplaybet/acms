@@ -178,6 +178,7 @@ if ($method === 'POST') {
     $onesignal_api_key = $data['onesignal_api_key'] ?? null;
     $custom_scripts = $data['custom_scripts'] ?? ($data['custom_script'] ?? null);
     $tawk_to_id = $data['tawk_to_id'] ?? null;
+    $appmetrica_key = $data['appmetrica_key'] ?? null;
 
     // UX & Metinler
     $legal_texts_json = $data['legal_texts_json'] ?? null;
@@ -227,6 +228,7 @@ if ($method === 'POST') {
         $db->exec("ALTER TABLE apps ADD COLUMN IF NOT EXISTS enable_haptic TINYINT(1) DEFAULT 1");
         $db->exec("ALTER TABLE apps ADD COLUMN IF NOT EXISTS haptic_intensity VARCHAR(20) DEFAULT 'light'");
         $db->exec("ALTER TABLE apps ADD COLUMN IF NOT EXISTS keep_screen_awake TINYINT(1) DEFAULT 1");
+        $db->exec("ALTER TABLE apps ADD COLUMN IF NOT EXISTS appmetrica_key VARCHAR(100) DEFAULT NULL");
     } catch (Exception $e) {
         try { $db->exec("ALTER TABLE apps ADD COLUMN is_force_update TINYINT(1) DEFAULT 0"); } catch (Exception $e2) {}
         try { $db->exec("ALTER TABLE apps ADD COLUMN welcome_modal_title VARCHAR(255) DEFAULT 'Important Notice'"); } catch (Exception $e2) {}
@@ -235,6 +237,7 @@ if ($method === 'POST') {
         try { $db->exec("ALTER TABLE apps ADD COLUMN enable_haptic TINYINT(1) DEFAULT 1"); } catch (Exception $e2) {}
         try { $db->exec("ALTER TABLE apps ADD COLUMN haptic_intensity VARCHAR(20) DEFAULT 'light'"); } catch (Exception $e2) {}
         try { $db->exec("ALTER TABLE apps ADD COLUMN keep_screen_awake TINYINT(1) DEFAULT 1"); } catch (Exception $e2) {}
+        try { $db->exec("ALTER TABLE apps ADD COLUMN appmetrica_key VARCHAR(100) DEFAULT NULL"); } catch (Exception $e2) {}
     }
 
     try {
@@ -252,7 +255,7 @@ if ($method === 'POST') {
                     brand_id=?, theme=?, name=?, slug=?, app_type=?, price=?, frontend_url=?, 
                     primary_color=?, secondary_color=?, accent_color=?, bg_color=?, font_family=?, logo_url=?, favicon_url=?,
                     user_agent=?, is_ios_allowed=?, min_version=?, min_required_version=?, is_force_update=?, history_limit_days=?,
-                    onesignal_app_id=?, onesignal_api_key=?, custom_scripts=?, tawk_to_id=?,
+                    onesignal_app_id=?, onesignal_api_key=?, custom_scripts=?, tawk_to_id=?, appmetrica_key=?,
                     legal_texts_json=?, announcement_popup=?, maintenance_mode=?, app_version=?,
                     contact_telegram=?, contact_email=?, contact_whatsapp=?, contact_instagram=?,
                     contact_telegram_response=?, contact_email_response=?, contact_whatsapp_response=?, contact_instagram_response=?,
@@ -269,7 +272,7 @@ if ($method === 'POST') {
                 $brand_id, $theme, $name, $slug, $app_type, $price, $frontend_url,
                 $primary_color, $secondary_color, $accent_color, $bg_color, $font_family, $logo_url, $favicon_url,
                 $user_agent, $is_ios_allowed, $min_version, $min_required_version, $is_force_update, $history_limit_days,
-                $onesignal_app_id, $onesignal_api_key, $custom_scripts, $tawk_to_id,
+                $onesignal_app_id, $onesignal_api_key, $custom_scripts, $tawk_to_id, $appmetrica_key,
                 $legal_texts_json, $announcement_popup, $maintenance_mode, $app_version,
                 $contact_telegram, $contact_email, $contact_whatsapp, $contact_instagram,
                 $contact_telegram_response, $contact_email_response, $contact_whatsapp_response, $contact_instagram_response,
@@ -290,7 +293,7 @@ if ($method === 'POST') {
                     brand_id, theme, name, slug, app_type, price, frontend_url, 
                     primary_color, secondary_color, accent_color, bg_color, font_family, logo_url, favicon_url,
                     user_agent, is_ios_allowed, min_version, min_required_version, is_force_update, history_limit_days,
-                    onesignal_app_id, onesignal_api_key, custom_scripts, tawk_to_id,
+                    onesignal_app_id, onesignal_api_key, custom_scripts, tawk_to_id, appmetrica_key,
                     legal_texts_json, announcement_popup, maintenance_mode, app_version,
                     contact_telegram, contact_email, contact_whatsapp, contact_instagram,
                     contact_telegram_response, contact_email_response, contact_whatsapp_response, contact_instagram_response,
@@ -305,7 +308,7 @@ if ($method === 'POST') {
                     ?, ?, ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
                     ?, ?, ?, ?,
                     ?, ?, ?, ?,
                     ?, ?, ?, ?,
@@ -323,7 +326,7 @@ if ($method === 'POST') {
                 $brand_id, $theme, $name, $slug, $app_type, $price, $frontend_url,
                 $primary_color, $secondary_color, $accent_color, $bg_color, $font_family, $logo_url, $favicon_url,
                 $user_agent, $is_ios_allowed, $min_version, $min_required_version, $is_force_update, $history_limit_days,
-                $onesignal_app_id, $onesignal_api_key, $custom_scripts, $tawk_to_id,
+                $onesignal_app_id, $onesignal_api_key, $custom_scripts, $tawk_to_id, $appmetrica_key,
                 $legal_texts_json, $announcement_popup, $maintenance_mode, $app_version,
                 $contact_telegram, $contact_email, $contact_whatsapp, $contact_instagram,
                 $contact_telegram_response, $contact_email_response, $contact_whatsapp_response, $contact_instagram_response,

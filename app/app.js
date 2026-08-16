@@ -52,6 +52,10 @@ const Native = {
 
     haptic(style = 'light') {
         try {
+            const userPref = localStorage.getItem('app_haptic_enabled') !== '0';
+            if (!userPref) {
+                return;
+            }
             if (appConfigRef.value && appConfigRef.value.enable_haptic === false) {
                 return;
             }
@@ -202,6 +206,116 @@ const PushClient = {
         } catch (e) {
             console.warn('[OneSignal] Logout error:', e);
         }
+    },
+
+    updateNotificationTags(tags) {
+        const OneSignal = window.plugins?.OneSignal || window.OneSignal;
+        if (!OneSignal) return;
+        try {
+            if (OneSignal.User && typeof OneSignal.User.addTags === 'function') {
+                OneSignal.User.addTags(tags);
+                console.log('[OneSignal] Notification tags updated:', tags);
+            }
+        } catch (e) {
+            console.warn('[OneSignal] updateNotificationTags error:', e);
+        }
+    }
+};
+
+// --- CENTRALIZED YANDEX APPMETRICA ANALYTICS CLIENT ---
+const AppMetricaClient = {
+    isInitialized: false,
+    apiKey: null,
+
+    init(appConfig) {
+        if (this.isInitialized) return;
+        const key = appConfig?.appmetrica_key;
+        if (!key) {
+            console.log('[AppMetrica] No AppMetrica Key configured for this app.');
+            return;
+        }
+
+        this.apiKey = key;
+        console.log('[AppMetrica] Initializing with Key:', key);
+
+        try {
+            // Native Plugin (Cordova / Capacitor: cordova-plugin-appmetrica)
+            const AppMetrica = window.appMetrica || window.plugins?.appMetrica || window.AppMetrica;
+            if (AppMetrica && typeof AppMetrica.activate === 'function') {
+                AppMetrica.activate({
+                    apiKey: key,
+                    sessionTimeout: 120,
+                    crashReporting: true,
+                    nativeCrashReporting: true,
+                    locationTracking: false,
+                    logs: false
+                });
+                console.log('[AppMetrica] Native SDK activated.');
+            } else if (window.Android && typeof window.Android.initAppMetrica === 'function') {
+                // Native Android WebView Interface
+                window.Android.initAppMetrica(key);
+            }
+
+            this.isInitialized = true;
+            this.reportEvent('app_init', {
+                app_id: String(appConfig?.app_id || 1),
+                app_name: appConfig?.app_name || '',
+                theme: appConfig?.theme || 'real',
+                platform: navigator.userAgent
+            });
+        } catch (e) {
+            console.warn('[AppMetrica] Init error:', e);
+        }
+    },
+
+    reportEvent(eventName, params = {}) {
+        try {
+            const AppMetrica = window.appMetrica || window.plugins?.appMetrica || window.AppMetrica;
+            if (AppMetrica && typeof AppMetrica.reportEvent === 'function') {
+                AppMetrica.reportEvent(eventName, params);
+            } else if (window.Android && typeof window.Android.reportEvent === 'function') {
+                window.Android.reportEvent(eventName, JSON.stringify(params));
+            } else {
+                // Dev / Preview logger
+                console.log(`[AppMetrica Event] ${eventName}:`, params);
+            }
+        } catch (e) {
+            console.warn(`[AppMetrica] Failed to report event ${eventName}:`, e);
+        }
+    },
+
+    reportError(name, error) {
+        try {
+            const AppMetrica = window.appMetrica || window.plugins?.appMetrica || window.AppMetrica;
+            if (AppMetrica && typeof AppMetrica.reportError === 'function') {
+                AppMetrica.reportError(name, error);
+            } else {
+                console.warn(`[AppMetrica Error] ${name}:`, error);
+            }
+        } catch (e) {
+            console.warn('[AppMetrica] Failed to report error:', e);
+        }
+    },
+
+    setUserProfile(user, appConfig) {
+        if (!user || !user.id) return;
+        try {
+            const userIdStr = String(user.id);
+            const userProfile = {
+                user_id: userIdStr,
+                app_id: String(appConfig?.app_id || 1),
+                status: user.status || 'pending',
+                is_vip: (user.status === 'active' || user.is_vip) ? 1 : 0
+            };
+
+            const AppMetrica = window.appMetrica || window.plugins?.appMetrica || window.AppMetrica;
+            if (AppMetrica && typeof AppMetrica.setUserProfileID === 'function') {
+                AppMetrica.setUserProfileID(userIdStr);
+            }
+            this.reportEvent('user_identified', userProfile);
+        } catch (e) {
+            console.warn('[AppMetrica] SetUserProfile error:', e);
+        }
     }
 };
 
@@ -228,6 +342,11 @@ const showToast = (message, type = 'success') => {
 const Onboarding = {
     template: `
         <div class="onboarding-container">
+            <div class="ob-top-actions">
+                <button class="ob-skip-btn" @click="skipOnboarding" v-if="step < 3">
+                    {{ $t('common.skip') }}
+                </button>
+            </div>
             <div class="ob-image">
                 <svg v-if="step === 1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                 <svg v-else-if="step === 2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
@@ -242,7 +361,10 @@ const Onboarding = {
                 <div class="ob-dot" :class="{active: step === 3}"></div>
             </div>
             
-            <button class="btn-gradient btn-block" @click="nextStep">{{ step === 3 ? 'Get Started' : 'Next' }}</button>
+            <button class="btn-gradient btn-block onboarding-btn" @click="nextStep">
+                <span>{{ step === 3 ? $t('common.get_started') : $t('common.next') }}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:8px;"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
         </div>
     `,
     setup() {
@@ -258,6 +380,7 @@ const Onboarding = {
         });
 
         const nextStep = () => {
+            Native.haptic('light');
             if (step.value < 3) {
                 step.value++;
             } else {
@@ -266,7 +389,13 @@ const Onboarding = {
             }
         };
 
-        return { step, steps, nextStep };
+        const skipOnboarding = () => {
+            Native.haptic('light');
+            localStorage.setItem('seen_onboarding', 'true');
+            router.push('/');
+        };
+
+        return { step, steps, nextStep, skipOnboarding };
     }
 };
 
@@ -2065,7 +2194,7 @@ const Profile = {
                     {{ $t('profile.update_order_code') }}
                 </button>
                 
-                <!-- Preferences Section (Language & Timezone) -->
+                <!-- Preferences Section (Language, Timezone, Keep Awake, Haptic) -->
                 <h3 class="section-title" style="font-size: 13px; color: #a0a0a0; text-transform: uppercase;">{{ $t('profile.preferences_section') }}</h3>
                 <div class="menu-group">
                     <!-- Language Selection -->
@@ -2114,6 +2243,73 @@ const Profile = {
                         </div>
                     </div>
                     <div class="toggle-switch" :class="{ on: isKeepAwake }">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
+                <!-- Haptic / Vibration Switch -->
+                <div class="switch-container" @click="toggleHaptic" style="margin-top: 10px;">
+                    <div style="text-align:left;">
+                        <div class="switch-label-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 1 0 8M6 8a6 6 0 0 0 0 8M21 5a10 10 0 0 1 0 14M3 5a10 10 0 0 0 0 14M9 5h6a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+                            <span>{{ $t('profile.haptic_title') }}</span>
+                        </div>
+                        <div class="switch-label-desc">
+                            {{ isHapticEnabled ? $t('profile.haptic_on') : $t('profile.haptic_off') }} • {{ $t('profile.haptic_desc') }}
+                        </div>
+                    </div>
+                    <div class="toggle-switch" :class="{ on: isHapticEnabled }">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
+                <!-- Notification Preferences Section -->
+                <h3 class="section-title" style="font-size: 13px; color: #a0a0a0; text-transform: uppercase; margin-top:20px;">{{ $t('profile.notifications_section') }}</h3>
+                
+                <!-- Daily Picks Notifications Switch -->
+                <div class="switch-container" @click="toggleNotifDaily">
+                    <div style="text-align:left;">
+                        <div class="switch-label-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                            <span>{{ $t('profile.notif_daily_picks_title') }}</span>
+                        </div>
+                        <div class="switch-label-desc">
+                            {{ $t('profile.notif_daily_picks_desc') }}
+                        </div>
+                    </div>
+                    <div class="toggle-switch" :class="{ on: notifDailyPicks }">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
+                <!-- VIP Predictions Notifications Switch -->
+                <div class="switch-container" @click="toggleNotifVip" style="margin-top: 10px;">
+                    <div style="text-align:left;">
+                        <div class="switch-label-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent, #ffcc00)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                            <span style="color:var(--color-accent, #ffcc00);">{{ $t('profile.notif_vip_picks_title') }}</span>
+                        </div>
+                        <div class="switch-label-desc">
+                            {{ $t('profile.notif_vip_picks_desc') }}
+                        </div>
+                    </div>
+                    <div class="toggle-switch" :class="{ on: notifVipPicks }">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+
+                <!-- Announcements Notifications Switch -->
+                <div class="switch-container" @click="toggleNotifAnnouncements" style="margin-top: 10px;">
+                    <div style="text-align:left;">
+                        <div class="switch-label-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                            <span>{{ $t('profile.notif_announcements_title') }}</span>
+                        </div>
+                        <div class="switch-label-desc">
+                            {{ $t('profile.notif_announcements_desc') }}
+                        </div>
+                    </div>
+                    <div class="toggle-switch" :class="{ on: notifAnnouncements }">
                         <div class="toggle-slider"></div>
                     </div>
                 </div>
@@ -2305,6 +2501,12 @@ const Profile = {
         const isAutoTimezone = window.i18n ? window.i18n.autoTimezone : ref(true);
         const isKeepAwake = window.i18n ? window.i18n.keepScreenAwake : ref(true);
 
+        // Haptic Feedback & Notification Preferences state
+        const isHapticEnabled = ref(localStorage.getItem('app_haptic_enabled') !== '0');
+        const notifDailyPicks = ref(localStorage.getItem('notif_daily_picks') !== '0');
+        const notifVipPicks = ref(localStorage.getItem('notif_vip_picks') !== '0');
+        const notifAnnouncements = ref(localStorage.getItem('notif_announcements') !== '0');
+
         const currentLangInfo = computed(() => {
             if (!supportedLanguages || !supportedLanguages.length) {
                 return { code: 'en', name: 'English', nativeName: 'English (US/UK)', flag: '🇬🇧' };
@@ -2333,6 +2535,39 @@ const Profile = {
             if (window.i18n) {
                 window.i18n.setKeepScreenAwake(!isKeepAwake.value);
             }
+        };
+
+        const toggleHaptic = () => {
+            isHapticEnabled.value = !isHapticEnabled.value;
+            localStorage.setItem('app_haptic_enabled', isHapticEnabled.value ? '1' : '0');
+            if (isHapticEnabled.value) {
+                Native.haptic('medium');
+            }
+            showToast(window.i18n ? (isHapticEnabled.value ? window.i18n.t('profile.haptic_on') : window.i18n.t('profile.haptic_off')) : 'Preference saved', 'success');
+        };
+
+        const toggleNotifDaily = () => {
+            Native.haptic('light');
+            notifDailyPicks.value = !notifDailyPicks.value;
+            localStorage.setItem('notif_daily_picks', notifDailyPicks.value ? '1' : '0');
+            PushClient.updateNotificationTags({ notif_daily_picks: notifDailyPicks.value ? '1' : '0' });
+            showToast(window.i18n ? window.i18n.t('common.success') : 'Saved', 'success');
+        };
+
+        const toggleNotifVip = () => {
+            Native.haptic('light');
+            notifVipPicks.value = !notifVipPicks.value;
+            localStorage.setItem('notif_vip_picks', notifVipPicks.value ? '1' : '0');
+            PushClient.updateNotificationTags({ notif_vip_picks: notifVipPicks.value ? '1' : '0' });
+            showToast(window.i18n ? window.i18n.t('common.success') : 'Saved', 'success');
+        };
+
+        const toggleNotifAnnouncements = () => {
+            Native.haptic('light');
+            notifAnnouncements.value = !notifAnnouncements.value;
+            localStorage.setItem('notif_announcements', notifAnnouncements.value ? '1' : '0');
+            PushClient.updateNotificationTags({ notif_announcements: notifAnnouncements.value ? '1' : '0' });
+            showToast(window.i18n ? window.i18n.t('common.success') : 'Saved', 'success');
         };
         
         const modal = ref({ isOpen: false, title: '', content: '' });
@@ -3087,6 +3322,9 @@ const loaderFallbackTimeout = setTimeout(() => {
             
             // Initialize OneSignal Push Client
             PushClient.init(appData, router);
+            
+            // Initialize Yandex AppMetrica Client
+            AppMetricaClient.init(appData);
             
             const root = document.documentElement;
             if (appData.primary_color) root.style.setProperty('--color-primary', appData.primary_color);
