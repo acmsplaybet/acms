@@ -42,7 +42,8 @@
         "maintenance_msg": "System is temporarily under maintenance.",
         "next": "Next",
         "get_started": "Get Started",
-        "skip": "Skip"
+        "skip": "Skip",
+        "search_placeholder": "Search teams or leagues..."
     },
     "auth": {
         "signin": "Sign In with Email",
@@ -256,6 +257,11 @@
         "step2_desc": "Detailed stats, historical head-to-head and form guide.",
         "step3_title": "3. Unlock VIP Predictions",
         "step3_desc": "Activate VIP Hub with your Google Play order code."
+    },
+    "match": {
+        "summary": "SUMMARY",
+        "stats": "STATS",
+        "h2h": "H2H"
     }
 };
 })();

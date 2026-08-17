@@ -42,7 +42,8 @@
         "maintenance_msg": "Il sistema è temporaneamente in manutenzione.",
         "next": "Avanti",
         "get_started": "Inizia",
-        "skip": "Salta"
+        "skip": "Salta",
+        "search_placeholder": "Cerca squadre o campionati..."
     },
     "auth": {
         "signin": "Accedi con E-mail",
@@ -256,6 +257,11 @@
         "step2_desc": "Statistiche approfondite, stato di forma e giudizio degli esperti.",
         "step3_title": "3. Sblocca i Pronostici VIP",
         "step3_desc": "Attiva il VIP Hub con il tuo codice d'ordine di Google Play."
+    },
+    "match": {
+        "summary": "SOMMARIO",
+        "stats": "STATISTICHE",
+        "h2h": "SCONTRI DIRETTI"
     }
 };
 })();

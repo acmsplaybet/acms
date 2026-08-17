@@ -3055,6 +3055,10 @@ const routes = [
     { path: '/forgot-password', component: ForgotPassword },
     { path: '/welcome', component: Welcome },
     { 
+        path: '/elite-demo', 
+        component: window.EliteDark2026Dashboard || { template: '<div style="color:#fff; padding:20px; text-align:center;">Elite VIP 2026 Theme</div>' } 
+    },
+    { 
         path: '/app', 
         component: AppLayout,
         children: [
@@ -3094,6 +3098,15 @@ router.afterEach((to) => {
 router.beforeEach(async (to, from, next) => {
     const urlParams = new URLSearchParams(window.location.search);
     const isPreview = urlParams.get('preview') === 'true' || urlParams.get('preview') === '1';
+    const themeParam = urlParams.get('theme');
+
+    // Elite Dark 2026 Theme Preview Bypass
+    if (themeParam === 'elite-dark-2026' || themeParam === 'elite_2026' || to.path === '/elite-demo') {
+        if (to.path !== '/elite-demo') {
+            return next('/elite-demo');
+        }
+        return next();
+    }
 
     const seenOnboarding = localStorage.getItem('seen_onboarding');
     const token = localStorage.getItem('acms_token_1');

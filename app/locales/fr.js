@@ -42,7 +42,8 @@
         "maintenance_msg": "Le système est temporairement en maintenance.",
         "next": "Suivant",
         "get_started": "Démarrer",
-        "skip": "Passer"
+        "skip": "Passer",
+        "search_placeholder": "Rechercher équipes ou ligues..."
     },
     "auth": {
         "signin": "Se connecter par E-mail",
@@ -256,6 +257,11 @@
         "step2_desc": "Statistiques détaillées, forme des équipes et bilans experts.",
         "step3_title": "3. Débloquez les Pronos VIP",
         "step3_desc": "Activez le VIP Hub avec votre numéro de commande Google Play."
+    },
+    "match": {
+        "summary": "RÉSUMÉ",
+        "stats": "STATS",
+        "h2h": "CONFRONTATIONS"
     }
 };
 })();

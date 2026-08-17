@@ -42,7 +42,8 @@
         "maintenance_msg": "El sistema está temporalmente en mantenimiento.",
         "next": "Siguiente",
         "get_started": "Empezar",
-        "skip": "Omitir"
+        "skip": "Omitir",
+        "search_placeholder": "Buscar equipos o ligas..."
     },
     "auth": {
         "signin": "Iniciar sesión con Correo",
@@ -256,6 +257,11 @@
         "step2_desc": "Estadísticas detalladas, racha de equipos e informes expertos.",
         "step3_title": "3. Desbloquea Pronósticos VIP",
         "step3_desc": "Activa el VIP Hub con tu código de pedido de Google Play."
+    },
+    "match": {
+        "summary": "RESUMEN",
+        "stats": "ESTADÍSTICAS",
+        "h2h": "H2H"
     }
 };
 })();

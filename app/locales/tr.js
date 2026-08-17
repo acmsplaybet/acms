@@ -42,7 +42,8 @@
         "maintenance_msg": "Sistem geçici olarak bakım modundadır.",
         "next": "İleri",
         "get_started": "Başla",
-        "skip": "Geç"
+        "skip": "Geç",
+        "search_placeholder": "Takım veya lig ara..."
     },
     "auth": {
         "signin": "E-posta ile Giriş Yap",
@@ -256,6 +257,11 @@
         "step2_desc": "Detaylı istatistikler, takım form durumları ve uzman yorumları.",
         "step3_title": "3. VIP Tahminleri Açın",
         "step3_desc": "Google Play sipariş kodunuzla VIP Hub'a anında erişin."
+    },
+    "match": {
+        "summary": "ÖZET",
+        "stats": "İSTATİSTİK",
+        "h2h": "H2H"
     }
 };
 })();

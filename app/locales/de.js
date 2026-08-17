@@ -42,7 +42,8 @@
         "maintenance_msg": "System befindet sich vorübergehend im Wartungsmodus.",
         "next": "Weiter",
         "get_started": "Loslegen",
-        "skip": "Überspringen"
+        "skip": "Überspringen",
+        "search_placeholder": "Teams oder Ligen suchen..."
     },
     "auth": {
         "signin": "Mit E-Mail anmelden",
@@ -256,6 +257,11 @@
         "step2_desc": "Detaillierte Statistiken, Team-Formkurven und Expertenberichte.",
         "step3_title": "3. VIP-Prognosen freischalten",
         "step3_desc": "Aktivieren Sie den VIP Hub mit Ihrem Google Play Bestellcode."
+    },
+    "match": {
+        "summary": "ÜBERSICHT",
+        "stats": "STATISTIK",
+        "h2h": "DIREKTVERGLEICH"
     }
 };
 })();

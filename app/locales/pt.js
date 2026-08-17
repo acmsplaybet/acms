@@ -42,7 +42,8 @@
         "maintenance_msg": "O sistema está temporariamente em manutenção.",
         "next": "Próximo",
         "get_started": "Começar",
-        "skip": "Pular"
+        "skip": "Pular",
+        "search_placeholder": "Buscar times ou ligas..."
     },
     "auth": {
         "signin": "Entrar com E-mail",
@@ -256,6 +257,11 @@
         "step2_desc": "Estatísticas aprofundadas, histórico de confrontos e forma.",
         "step3_title": "3. Libere Palpites VIP",
         "step3_desc": "Ative a Central VIP com o seu código de pedido da Google Play."
+    },
+    "match": {
+        "summary": "RESUMO",
+        "stats": "ESTATÍSTICAS",
+        "h2h": "H2H"
     }
 };
 })();
